@@ -16,7 +16,7 @@ function createWindow() {
       contextIsolation: false
     },
     autoHideMenuBar: true,
-    title: "CRASCAD Technical Glossary"
+    title: "CRASCAD App"
   });
 
   // Check if we are in development mode
