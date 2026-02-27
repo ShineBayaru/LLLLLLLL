@@ -1,5 +1,5 @@
 {
-  "name": "react-example",
+  "name": "crascad-app",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -38,8 +38,8 @@
     "vite": "^6.2.0"
   },
   "build": {
-    "appId": "com.crascad.glossary",
-    "productName": "CRASCAD Glossary",
+    "appId": "com.crascad.app",
+    "productName": "CRASCAD App",
     "directories": {
       "output": "release"
     },
