@@ -226,7 +226,13 @@ export default function App() {
       setTerms(terms.map(t => t.id === term.id ? term : t));
       if (selectedTerm?.id === term.id) setSelectedTerm(term);
     } else {
-      setTerms([term, ...terms]);
+      // Generate sequential ID based on existing terms
+      const ids = terms.map(t => parseInt(t.id.replace('TRM-', ''), 10)).filter(n => !isNaN(n));
+      const maxId = ids.length > 0 ? Math.max(...ids) : 0;
+      const newId = `TRM-${(maxId + 1).toString().padStart(3, '0')}`;
+      const newTerm = { ...term, id: newId };
+      // Add new term to the end of the list (newest at the bottom)
+      setTerms([...terms, newTerm]);
     }
     setIsAddModalOpen(false);
     setEditingTerm(null);
@@ -308,7 +314,7 @@ export default function App() {
       }
       
       if (newTerms.length > 0) {
-        setTerms([...newTerms, ...terms.filter(t => !newTerms.find(nt => nt.id === t.id))]);
+        setTerms([...terms.filter(t => !newTerms.find(nt => nt.id === t.id)), ...newTerms]);
         alert(`${UI_TEXTS[selectedLang].importSuccess} (${newTerms.length})`);
       }
     };
@@ -804,7 +810,32 @@ function PreviewPanel({ term, lang, onEdit, onDelete, onPreviewClick }: { term: 
         <p className="text-tech-blue text-sm relative z-10">{term.yomikata}</p>
       </div>
 
-      {/* Details (Moved above image) */}
+      {/* Image */}
+      <div className="w-full h-48 bg-input-bg border-b border-border-color relative flex items-center justify-center overflow-hidden shrink-0">
+        {term.image ? (
+          <>
+            <img 
+              src={term.image} 
+              alt={term.goku} 
+              className="w-full h-full object-cover opacity-80" 
+              crossOrigin="anonymous" 
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-bg-main to-transparent pointer-events-none"></div>
+          </>
+        ) : (
+          <div className="text-tech-blue/30 flex flex-col items-center gap-2">
+            <ImageIcon size={32} />
+            <span className="text-xs font-mono">{UI_TEXTS[lang].noImage}</span>
+          </div>
+        )}
+        {/* Decorative corner brackets */}
+        <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-tech-blue/50"></div>
+        <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-tech-blue/50"></div>
+        <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-tech-blue/50"></div>
+        <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-tech-blue/50"></div>
+      </div>
+
+      {/* Details */}
       <div className="p-6 flex-1 overflow-y-auto flex flex-col gap-4">
         <DetailRow label={UI_TEXTS[lang].common} value={term.tsushou} />
         <DetailRow label={UI_TEXTS[lang].english} value={term.eigo} />
@@ -834,31 +865,6 @@ function PreviewPanel({ term, lang, onEdit, onDelete, onPreviewClick }: { term: 
           <div>{UI_TEXTS[lang].updated}: {term.updatedAt}</div>
           <div>{UI_TEXTS[lang].by}: {term.lastEditedBy}</div>
         </div>
-      </div>
-
-      {/* Image (Moved below details) */}
-      <div className="w-full h-48 bg-input-bg border-t border-border-color relative flex items-center justify-center overflow-hidden shrink-0">
-        {term.image ? (
-          <>
-            <img 
-              src={term.image} 
-              alt={term.goku} 
-              className="w-full h-full object-cover opacity-80" 
-              crossOrigin="anonymous" 
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-bg-main to-transparent pointer-events-none"></div>
-          </>
-        ) : (
-          <div className="text-tech-blue/30 flex flex-col items-center gap-2">
-            <ImageIcon size={32} />
-            <span className="text-xs font-mono">{UI_TEXTS[lang].noImage}</span>
-          </div>
-        )}
-        {/* Decorative corner brackets */}
-        <div className="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-tech-blue/50"></div>
-        <div className="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-tech-blue/50"></div>
-        <div className="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-tech-blue/50"></div>
-        <div className="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-tech-blue/50"></div>
       </div>
 
       {/* Actions */}
