@@ -1,0 +1,253 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Rajdhani", "Noto Sans JP", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-tech-blue: var(--tech-blue);
+  --color-tech-blue-dark: var(--tech-blue-dark);
+  --color-amber: var(--amber);
+  --color-dark-bg: var(--bg-main);
+  --color-panel-bg: var(--panel-bg);
+  --color-text-main: var(--text-main);
+  --color-text-muted: var(--text-muted);
+  --color-border-color: var(--border-color);
+  --color-panel-inner: var(--panel-inner);
+  --color-input-bg: var(--input-bg);
+}
+
+:root {
+  --tech-blue: #007bb5;
+  --tech-blue-dark: #004098;
+  --amber: #e65c00;
+  --bg-main: #e2e8f0; /* Darker light background for better contrast */
+  --panel-bg: rgba(255, 255, 255, 0.95); /* More opaque white */
+  --text-main: #0f172a; /* Very dark slate for text */
+  --text-muted: #475569; /* Darker muted text */
+  --border-color: rgba(0, 123, 181, 0.35); /* More visible border */
+  --panel-inner: rgba(241, 245, 249, 0.8);
+  --input-bg: rgba(255, 255, 255, 0.9);
+}
+
+.dark {
+  --tech-blue: #00a0e9;
+  --tech-blue-dark: #004098;
+  --amber: #ff6b00;
+  --bg-main: #0f172a; /* Lighter dark background (slate-900 instead of near black) */
+  --panel-bg: rgba(30, 41, 59, 0.85); /* Slate-800 with opacity */
+  --text-main: #f8fafc; /* Brighter white text */
+  --text-muted: #94a3b8; /* Lighter muted text */
+  --border-color: rgba(0, 160, 233, 0.3);
+  --panel-inner: rgba(15, 23, 42, 0.6);
+  --input-bg: rgba(15, 23, 42, 0.8);
+}
+
+body {
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Noise overlay */
+.bg-noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 50;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Grid background */
+.bg-grid {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: -1;
+  background-size: 40px 40px;
+  background-image: 
+    linear-gradient(to right, var(--border-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--border-color) 1px, transparent 1px);
+  transform: perspective(500px) rotateX(60deg) translateY(-100px) translateZ(-200px);
+  animation: gridMove 20s linear infinite;
+}
+
+@keyframes gridMove {
+  0% { background-position: 0 0; }
+  100% { background-position: 0 40px; }
+}
+
+/* Glass panel */
+.glass-panel {
+  background: var(--panel-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.05), inset 0 0 20px rgba(255, 255, 255, 0.02);
+  position: relative;
+  overflow: hidden;
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.dark .glass-panel {
+  box-shadow: 0 0 20px rgba(0, 160, 233, 0.05), inset 0 0 20px rgba(0, 160, 233, 0.02);
+}
+
+.glass-panel::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
+  background: var(--tech-blue);
+  box-shadow: 0 0 10px var(--tech-blue);
+  opacity: 0.5;
+}
+
+/* Tech Button */
+.tech-button {
+  position: relative;
+  background: var(--input-bg);
+  border: 1px solid var(--border-color);
+  color: var(--tech-blue);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.tech-button:hover {
+  background: var(--border-color);
+  border-color: var(--tech-blue);
+  box-shadow: 0 0 15px var(--border-color);
+  text-shadow: 0 0 8px var(--border-color);
+}
+
+.tech-button::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(to bottom right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.1) 50%, rgba(255,255,255,0) 100%);
+  transform: rotate(45deg) translateY(-100%);
+  transition: transform 0.6s ease;
+}
+
+.tech-button:hover::after {
+  transform: rotate(45deg) translateY(100%);
+}
+
+.tech-button.amber {
+  color: var(--amber);
+  border-color: rgba(255, 107, 0, 0.3);
+}
+
+.tech-button.amber:hover {
+  background: rgba(255, 107, 0, 0.15);
+  border-color: var(--amber);
+  box-shadow: 0 0 15px rgba(255, 107, 0, 0.3);
+  text-shadow: 0 0 8px rgba(255, 107, 0, 0.5);
+}
+
+/* Table styles */
+.tech-table th {
+  background: var(--border-color);
+  color: var(--tech-blue);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  border-bottom: 1px solid var(--border-color);
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.tech-table td {
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.2s ease;
+}
+
+.tech-table tr:hover td {
+  background: var(--border-color);
+}
+
+.tech-table tr.selected td {
+  background: var(--border-color);
+  border-bottom: 1px solid var(--tech-blue);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+.dark ::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--tech-blue);
+}
+
+/* Focus ring */
+*:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* Glitch text effect */
+.glitch-text {
+  position: relative;
+}
+.glitch-text::before, .glitch-text::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.8;
+}
+.glitch-text::before {
+  left: 2px;
+  text-shadow: -1px 0 red;
+  clip: rect(24px, 550px, 90px, 0);
+  animation: glitch-anim 3s infinite linear alternate-reverse;
+}
+.glitch-text::after {
+  left: -2px;
+  text-shadow: -1px 0 blue;
+  clip: rect(85px, 550px, 140px, 0);
+  animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { clip: rect(10px, 9999px, 44px, 0); }
+  20% { clip: rect(80px, 9999px, 12px, 0); }
+  40% { clip: rect(30px, 9999px, 80px, 0); }
+  60% { clip: rect(90px, 9999px, 20px, 0); }
+  80% { clip: rect(20px, 9999px, 90px, 0); }
+  100% { clip: rect(50px, 9999px, 30px, 0); }
+}
+
+/* Flicker */
+.flicker {
+  animation: flicker 4s infinite;
+}
+@keyframes flicker {
+  0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+  20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.3; }
+}
